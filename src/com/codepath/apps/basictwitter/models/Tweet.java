@@ -2,19 +2,31 @@ package com.codepath.apps.basictwitter.models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Tweet implements Serializable {
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Column.ForeignKeyAction;
+import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
+
+@Table(name = "Tweets")
+public class Tweet extends Model implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -5779887379453615990L;
-	private String body;
+	@Column(name = "remote_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
 	private long uid;
+	@Column(name = "body")
+	private String body;
+	@Column(name = "create_at")
 	private String createdAt;
+	@Column(name = "user")
 	private User user;
 
 	public static Tweet fromJson(JSONObject jsonObject) {
@@ -68,11 +80,15 @@ public class Tweet implements Serializable {
 
 		return tweets;
 	}
-	
+
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
 		return getBody() + " - " + getUser().getScreenName();
+	}
+
+	public static List<Tweet> getFromDB() {
+		return new Select().from(Tweet.class).execute();
 	}
 
 }

@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/ivUserProfileImage"
-        android:layout_marginLeft="16dp"
+        android:layout_marginLeft="10dp"
         android:layout_toRightOf="@+id/ivUserProfileImage"
         android:text="@string/user_name_label" />
 

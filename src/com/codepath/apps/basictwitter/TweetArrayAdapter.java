@@ -68,6 +68,8 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet> {
 				viewHolder.ivProfileImage);
 		viewHolder.tvUserName.setText(tweet.getUser().getScreenName());
 		viewHolder.tvBody.setText(tweet.getBody());
+		//Linkify.addLinks(viewHolder.tvBody, Linkify.ALL);
+		//viewHolder.tvBody.setMovementMethod(LinkMovementMethod.getInstance());
 		String timeStamp = tweet.getCreatedAt();
 		String timeStampFormatted = getRelativeTimeAgo(timeStamp);
 		viewHolder.tvTimeStamp.setText(timeStampFormatted);

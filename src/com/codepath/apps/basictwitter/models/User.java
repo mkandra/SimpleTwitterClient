@@ -8,7 +8,6 @@ import org.json.JSONObject;
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
-import com.activeandroid.query.Select;
 
 @Table(name = "Users")
 public class User extends Model implements Serializable{
@@ -40,14 +39,22 @@ public class User extends Model implements Serializable{
 		return user;
 	}
 
-	public static User getAuthUser() {
-        // This is how you execute a query
-        return new Select()
-          .from(User.class)
-          .where("auth_user = ?", 1)
-          .executeSingle();
+	public void setUid(long uid) {
+		this.uid = uid;
 	}
-	
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setScreenName(String screenName) {
+		this.screenName = screenName;
+	}
+
+	public void setProfileImageUrl(String profileImageUrl) {
+		this.profileImageUrl = profileImageUrl;
+	}
+
 	public String getName() {
 		return name;
 	}

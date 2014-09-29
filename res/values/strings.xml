@@ -16,5 +16,7 @@
     <string name="user_name_label">Foo</string>
     <string name="compose_tweet_hint">What\'s happening?</string>
     <string name="action_tweet_submit_label">TWEET</string>
+    <string name="title_activity_detailed_tweet">DetailedTweetActivity</string>
+    <string name="tweet_body_label">Hello there!</string>
 
 </resources>

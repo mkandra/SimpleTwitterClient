@@ -3,11 +3,16 @@ package com.codepath.apps.basictwitter;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -29,15 +34,33 @@ public class ComposeTweetActivity extends Activity {
 	private TextView tvUserScreenName;
 	private EditText etTweet;
 	private TextView tvNumCharsLeft;
+	private Tweet tweetToReply;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_compose_tweet);
 		getActionBar().setDisplayShowTitleEnabled(false);
-		getActionBar().setBackgroundDrawable(new ColorDrawable(Color.argb(255, 85, 172, 238))); // Twitter Colour Palette
+		getActionBar().setBackgroundDrawable(
+				new ColorDrawable(Color.argb(255, 85, 172, 238))); // Twitter
+																	// Colour
+																	// Palette
+
+		//User auth_user = (User) getIntent().getSerializableExtra("auth_user");
+		SharedPreferences pref =   
+			    PreferenceManager.getDefaultSharedPreferences(this);
+		String auth_user_id = pref.getString("auth_user_uid", "");
+		String auth_user_name = pref.getString("auth_user_name", "");
+		String auth_user_screen_name = pref.getString("auth_user_screen_name", "");
+		String auth_user_profile_image_url = pref.getString("auth_user_profile_image_url", "");
 		
-		User auth_user = (User) getIntent().getSerializableExtra("auth_user");
+		User auth_user = new User();
+		auth_user.setUid(Long.parseLong(auth_user_id));
+		auth_user.setName(auth_user_name);
+		auth_user.setScreenName(auth_user_screen_name);
+		auth_user.setProfileImageUrl(auth_user_profile_image_url);
+		
+		tweetToReply = (Tweet) getIntent().getSerializableExtra("tweetToReply");
 
 		client = TwitterApplication.getRestClient();
 
@@ -45,6 +68,11 @@ public class ComposeTweetActivity extends Activity {
 		tvUserProfileName = (TextView) findViewById(R.id.tvUserProfileName);
 		tvUserScreenName = (TextView) findViewById(R.id.tvUserScreenName);
 		etTweet = (EditText) findViewById(R.id.etTweet);
+
+		if (tweetToReply != null) {
+			etTweet.setText("@" + tweetToReply.getUser().getScreenName() + " ");
+			etTweet.setSelection(etTweet.getText().length());
+		}
 
 		etTweet.addTextChangedListener(new TextWatcher() {
 
@@ -110,33 +138,69 @@ public class ComposeTweetActivity extends Activity {
 	public void onTweetSubmit(MenuItem item) {
 		String tweetToPost = etTweet.getText().toString();
 
+		if (!isNetworkAvailable()) {
+			Toast.makeText(this, "No Internet connection!", Toast.LENGTH_SHORT)
+					.show();
+		}
+
 		if (tweetToPost.length() > 100) {
 			Toast.makeText(this, "Limit text to 100 characters",
 					Toast.LENGTH_SHORT).show();
 			return;
 		}
 
-		client.postTweet(tweetToPost, new JsonHttpResponseHandler() {
-			@Override
-			public void onSuccess(JSONObject jsonObject) {
-				Toast.makeText(ComposeTweetActivity.this, "Posted Tweet",
-						Toast.LENGTH_SHORT).show();
-				Tweet tweet = Tweet.fromJson(jsonObject);
+		if (tweetToReply != null) {
+			
+			client.postReplyTweet(tweetToReply.getUid(), tweetToPost, new JsonHttpResponseHandler() {
+				@Override
+				public void onSuccess(JSONObject jsonObject) {
+					Toast.makeText(ComposeTweetActivity.this, "Reply posted",
+							Toast.LENGTH_SHORT).show();
+					Tweet tweet = Tweet.fromJson(jsonObject);
 
-				Intent data = new Intent();
-				data.putExtra("postedTweet", tweet);
-				setResult(RESULT_OK, data);
-				finish();
-			}
+					Intent data = new Intent();
+					data.putExtra("repliedTweet", tweet);
+					setResult(RESULT_OK, data);
+					finish();
+				}
 
-			@Override
-			public void onFailure(Throwable e, String s) {
-				Toast.makeText(ComposeTweetActivity.this,
-						"Failed to post the tweet! Try again",
-						Toast.LENGTH_SHORT).show();
-			}
-		});
+				@Override
+				public void onFailure(Throwable e, String s) {
+					Toast.makeText(ComposeTweetActivity.this,
+							"Failed to reply! Try again",
+							Toast.LENGTH_SHORT).show();
+				}
+			});
+		} else {
+			client.postTweet(tweetToPost, new JsonHttpResponseHandler() {
+				@Override
+				public void onSuccess(JSONObject jsonObject) {
+					Toast.makeText(ComposeTweetActivity.this, "Posted Tweet",
+							Toast.LENGTH_SHORT).show();
+					Tweet tweet = Tweet.fromJson(jsonObject);
 
+					Intent data = new Intent();
+					data.putExtra("postedTweet", tweet);
+					setResult(RESULT_OK, data);
+					finish();
+				}
+
+				@Override
+				public void onFailure(Throwable e, String s) {
+					Toast.makeText(ComposeTweetActivity.this,
+							"Failed to post the tweet! Try again",
+							Toast.LENGTH_SHORT).show();
+				}
+			});
+		}
+	}
+
+	private Boolean isNetworkAvailable() {
+		ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetworkInfo = connectivityManager
+				.getActiveNetworkInfo();
+		return activeNetworkInfo != null
+				&& activeNetworkInfo.isConnectedOrConnecting();
 	}
 
 }

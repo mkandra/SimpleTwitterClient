@@ -33,11 +33,11 @@
         android:id="@+id/tvTimeStamp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_alignBottom="@+id/ivTimeStamp"
+        android:layout_alignParentRight="true"
         android:layout_marginRight="12dp"
-        android:textColor="#A4A4A4"
-        android:text="@string/time_stamp_label" />
+        android:text="@string/time_stamp_label"
+        android:textColor="#A4A4A4" />
 
     <ImageView
         android:id="@+id/ivTimeStamp"
@@ -46,10 +46,10 @@
         android:layout_alignParentTop="true"
         android:layout_marginRight="2dp"
         android:layout_marginTop="5dp"
-        android:scaleType="centerInside"
+        android:layout_toLeftOf="@+id/tvTimeStamp"
         android:adjustViewBounds="true"
         android:maxHeight="18dp"
-        android:layout_toLeftOf="@+id/tvTimeStamp"
+        android:scaleType="centerInside"
         android:src="@drawable/ic_time_stamp" />
 
 </RelativeLayout>
