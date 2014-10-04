@@ -9,24 +9,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Column.ForeignKeyAction;
-import com.activeandroid.annotation.Table;
 import com.activeandroid.query.Select;
 
-@Table(name = "Tweets")
 public class Tweet extends Model implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -5779887379453615990L;
-	@Column(name = "remote_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
 	private long uid;
-	@Column(name = "body")
 	private String body;
-	@Column(name = "create_at")
 	private String createdAt;
-	@Column(name = "user")
 	private User user;
 
 	public static Tweet fromJson(JSONObject jsonObject) {
@@ -58,6 +50,22 @@ public class Tweet extends Model implements Serializable {
 
 	public User getUser() {
 		return user;
+	}
+
+	public void setUid(long uid) {
+		this.uid = uid;
+	}
+
+	public void setBody(String body) {
+		this.body = body;
+	}
+
+	public void setCreatedAt(String createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	public static ArrayList<Tweet> fromJSONArray(JSONArray jsonArray) {

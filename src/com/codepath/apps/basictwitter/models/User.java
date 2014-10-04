@@ -6,25 +6,22 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.activeandroid.Model;
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
 
-@Table(name = "Users")
-public class User extends Model implements Serializable{
-    /**
+public class User extends Model implements Serializable {
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -7815730823885250549L;
-	@Column(name = "remote_id", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
 	private long uid;
-    @Column(name = "Name")
 	private String name;
-    @Column(name = "screen_name")
 	private String screenName;
-    @Column(name = "profile_image_url")
 	private String profileImageUrl;
-	
-    
+	private byte[] byteImage;
+	private int tweets_count;
+	private int followers_count;
+	private int following_count;
+	private String tagline;
+
 	public static User fromJson(JSONObject jsonObject) {
 		User user = new User();
 		// Extract values from the json to populate the member variables
@@ -33,6 +30,10 @@ public class User extends Model implements Serializable{
 			user.uid = jsonObject.getLong("id");
 			user.screenName = jsonObject.getString("screen_name");
 			user.profileImageUrl = jsonObject.getString("profile_image_url");
+			user.tweets_count = jsonObject.getInt("statuses_count");
+			user.followers_count = jsonObject.getInt("followers_count");
+			user.following_count = jsonObject.getInt("friends_count");
+			user.tagline = jsonObject.getString("description");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -71,4 +72,43 @@ public class User extends Model implements Serializable{
 		return profileImageUrl;
 	}
 
+	public String getTagline() {
+		return tagline;
+	}
+
+	public int getFollowersCount() {
+		return followers_count;
+	}
+
+	public int getFollowingCount() {
+		return following_count;
+	}
+
+	public int getTweetsCount() {
+		return tweets_count;
+	}
+
+	public void setTweets_count(int tweets_count) {
+		this.tweets_count = tweets_count;
+	}
+
+	public void setFollowers_count(int followers_count) {
+		this.followers_count = followers_count;
+	}
+
+	public void setFollowing_count(int following_count) {
+		this.following_count = following_count;
+	}
+
+	public void setTagline(String tagline) {
+		this.tagline = tagline;
+	}
+
+	public byte[] getByteImage() {
+		return byteImage;
+	}
+
+	public void setByteImage(byte[] byteImage) {
+		this.byteImage = byteImage;
+	}
 }
