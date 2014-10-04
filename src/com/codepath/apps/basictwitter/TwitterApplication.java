@@ -1,5 +1,6 @@
 package com.codepath.apps.basictwitter;
 
+import android.app.Application;
 import android.content.Context;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -15,7 +16,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
  *     // use client to send requests to API
  *     
  */
-public class TwitterApplication extends com.activeandroid.app.Application {
+public class TwitterApplication extends Application {
 	private static Context context;
 
 	@Override
@@ -23,16 +24,20 @@ public class TwitterApplication extends com.activeandroid.app.Application {
 		super.onCreate();
 		TwitterApplication.context = this;
 
-		// Create global configuration and initialize ImageLoader with this configuration
-		DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder().
-				cacheInMemory().cacheOnDisc().build();
-		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
-		.defaultDisplayImageOptions(defaultOptions)
-		.build();
+		// Create global configuration and initialize ImageLoader with this
+		// configuration
+		DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
+				.cacheInMemory().cacheOnDisc().build();
+		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
+				getApplicationContext()).defaultDisplayImageOptions(
+				defaultOptions).build();
 		ImageLoader.getInstance().init(config);
+
 	}
 
 	public static TwitterClient getRestClient() {
-		return (TwitterClient) TwitterClient.getInstance(TwitterClient.class, TwitterApplication.context);
+		return (TwitterClient) TwitterClient.getInstance(TwitterClient.class,
+				TwitterApplication.context);
 	}
+
 }

@@ -18,5 +18,6 @@
     <string name="action_tweet_submit_label">TWEET</string>
     <string name="title_activity_detailed_tweet">DetailedTweetActivity</string>
     <string name="tweet_body_label">Hello there!</string>
+    <string name="title_activity_profile">ProfileActivity</string>
 
 </resources>
