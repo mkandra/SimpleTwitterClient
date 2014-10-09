@@ -35,6 +35,6 @@ Completed user stories:
 
 Walkthrough of above user stories:
 
-![Video Walkthrough](SimpleTwitterClientV2Demo.gif)
+![Video Walkthrough](SimpleTwitterClientWithFragments.gif)
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
